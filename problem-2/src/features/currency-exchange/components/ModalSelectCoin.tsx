@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 
 import { AppImage, AppInputSearch, AppModal } from '@/components';
-
 import type { Coin } from '@/types';
 import { cn } from '@/utils';
 

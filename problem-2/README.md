@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+# Project Structure — problem-2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This document describes the folder and file structure for the React + Vite project located in `problem-2/`. It highlights the purpose of important files and the responsibilities of key folders so contributors can quickly understand the code organization.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Project type: React application scaffolded for TypeScript and Vite.
+- Conventions: `src/` contains application source; `public/` contains static assets.
+- Live Demo: https://code-challenge-git-main-cuongnq610s-projects.vercel.app
 
-## React Compiler
+## Top-level files
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `index.html`: Vite entry HTML.
+- `package.json`: project scripts and dependencies (run/install commands are defined here).
+- `vite.config.ts`: Vite configuration.
+- `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json`: TypeScript configuration files.
+- `eslint.config.js`, `prettier.config.js`: linting and formatting configs.
 
-## Expanding the ESLint configuration
+## public/
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `coin-icon/`: static assets (icons) used by the app. Files in `public/` are served as-is.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## src/
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+High-level entry files:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+- `main.tsx`: application bootstrap (ReactDOM render / createRoot + providers).
+- `App.tsx`: root app component.
+- `index.css`, `App.css`: global and app-specific styles.
+
+Primary folders and responsibilities:
+
+- `assets/` — static images, fonts, and other assets imported by code.
+
+- `components/` — reusable UI components. Current subfolders include:
+  - `Button/` — `Button.tsx`, `CloseButton.tsx` and `index.ts` exporting the components.
+  - `Card/` — `Card.tsx` and `index.ts`.
+  - `Image/` — `Image.tsx` and `index.ts`.
+  - `Input/` — `index.ts`, `Input.tsx`, `InputNumber.tsx`, `InputSearch.tsx`.
+  - `Modal/` — `Modal.tsx` and `index.ts`.
+
+  These components are small, focused UI building blocks meant for reuse across screens.
+
+- `features/` — This code base is following `feature-base` structure that feature-specific code organized as modules (feature folders follow a local-namespace pattern):
+  - `currency-exchange/`
+    - `CurrencyExchange.tsx` — top-level feature component.
+    - `components/` — feature-specific components: `CoinInput.tsx`, `ModalSelectCoin.tsx`, `SwapButton.tsx`.
+    - `contexts/` — `CurrencyExchangeContext.tsx` provides context/state for the feature.
+    - `hocs/` — `withCurrencyExchange.tsx` (higher-order components for injecting feature behaviours).
+    - `hooks/` — `useCoinSwap.ts` and any other feature-specific hooks.
+
+- `hooks/` — generic application hooks (e.g., `useClickOutside.ts`). Reusable across features.
+
+- `services/` — API and data access logic:
+  - `axios.service.ts` — preconfigured axios instance and helpers.
+  - `coin.service.ts` — coin-related API calls.
+  - `index.ts` — barrel exports for services.
+
+- `types/` — TypeScript type definitions used across the app:
+  - `coin.type.ts` — coin-related type definitions.
+  - `index.ts` — aggregated exports.
+
+- `utils/` — small helpers and utilities:
+  - `number.util.ts`, `string.util.ts`, `promise.util.ts`, `style.util.ts` and `index.ts`.
+
+## Typical development commands
+
+Run these from inside `problem-2/`.
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Notes
 
-```js
-// eslint.config.js
-import reactDom from 'eslint-plugin-react-dom';
-import reactX from 'eslint-plugin-react-x';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+- Use ESM and only export constant to adopt `tree-shaking` feature of Vite to reduce bundle size.
+- Use `eslint` and `prettier` to define rules to code convention.

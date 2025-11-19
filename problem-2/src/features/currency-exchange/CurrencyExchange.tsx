@@ -1,5 +1,5 @@
 import { AppButton, AppCard } from '@/components';
-import { cn } from '@/utils';
+import { cn, delay, toastSuccess } from '@/utils';
 
 import { CoinInput, ModalSelectCoin, SwapButton } from './components';
 import { useCurrencyExchangeContext } from './contexts';
@@ -15,6 +15,9 @@ export const CurrencyExchange = withCurrencyExchange(() => {
     setSellAmount,
     swapCoin,
     loading,
+    submitting,
+    setSubmitting,
+    cleanUpContext
   } = useCurrencyExchangeContext();
 
   const disableTransfer = !sellCoin || !sellAmount || !receiveCoin;
@@ -24,6 +27,18 @@ export const CurrencyExchange = withCurrencyExchange(() => {
     sellCoin,
     sellAmount: sellAmount ? Number(sellAmount) : 0,
   });
+
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+      await delay(1500);
+
+      toastSuccess('Transfer successfully!');
+      cleanUpContext();
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <AppCard className={cn('flex flex-col items-start gap-3 bg-[#0d1421]', 'max-w-[480px]')}>
@@ -55,7 +70,9 @@ export const CurrencyExchange = withCurrencyExchange(() => {
 
       <AppButton
         disabled={disableTransfer}
+        loading={submitting}
         className="mt-3 w-full bg-green-600 text-xl font-semibold"
+        onClick={handleSubmit}
       >
         Transfer
       </AppButton>

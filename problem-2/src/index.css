@@ -4,6 +4,8 @@
 @theme {
   --animate-fade-in: fadeIn 0.3s ease-in forwards;
   --animate-fade-out: fadeOut 0.3s ease-in forwards;
+  --animate-toastEnter: toastEnter 0.3s ease-in forwards;
+  --animate-toastExit: toastExit 0.3s ease-in forwards;
 
   @keyframes fadeIn {
     0% {
@@ -26,6 +28,37 @@
     100% {
       opacity: 0.3;
       scale: 0.5;
+    }
+  }
+
+  @keyframes toastEnter {
+    0% {
+      opacity: 0;
+      transform: translateX(40px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  @keyframes toastExit {
+    0% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+  }
+
+  @keyframes toast-progress {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
     }
   }
 }

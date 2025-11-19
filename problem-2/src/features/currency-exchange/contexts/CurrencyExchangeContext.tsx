@@ -22,6 +22,7 @@ export type CurrencyExchangeContextType = {
   sellAmount: string;
   listCoins: Coin[];
   loading: boolean;
+  submitting: boolean;
   selectCointType: SelectCoinType;
   setSellCoin: (coin: Coin) => void;
   setReceiveCoin: (coin: Coin) => void;
@@ -30,6 +31,8 @@ export type CurrencyExchangeContextType = {
   selectCoinModalRef: React.RefObject<AppModalRef | null>;
   toggleSelectCoinModal: (type: SelectCoinType) => void;
   swapCoin: () => void;
+  setSubmitting: (value: boolean) => void;
+  cleanUpContext: () => Promise<void>
 };
 
 export const CurrencyExchangeContext = createContext<CurrencyExchangeContextType>({
@@ -38,14 +41,17 @@ export const CurrencyExchangeContext = createContext<CurrencyExchangeContextType
   sellAmount: '',
   listCoins: [],
   loading: false,
-  setSellCoin: () => {},
-  setReceiveCoin: () => {},
-  setSellAmount: () => {},
-  getListCoins: async () => {},
+  submitting: false,
+  setSellCoin: () => { },
+  setReceiveCoin: () => { },
+  setSellAmount: () => { },
+  getListCoins: async () => { },
   selectCoinModalRef: { current: null },
-  toggleSelectCoinModal: () => {},
+  toggleSelectCoinModal: () => { },
   selectCointType: null,
-  swapCoin: () => {},
+  swapCoin: () => { },
+  setSubmitting: () => { },
+  cleanUpContext: async () => { }
 });
 
 export const useCurrencyExchangeContext = () => useContext(CurrencyExchangeContext);
@@ -60,6 +66,7 @@ export const CurrencyExchangeContextProvider: FC<CurrencyExchangeContextProvider
   const [sellAmount, setSellAmount] = useState<string>('');
   const [listCoins, setListCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [selectCointType, setSelectCointType] = useState<SelectCoinType>(null);
 
   const selectCoinModalRef = useRef<AppModalRef | null>(null);
@@ -104,6 +111,13 @@ export const CurrencyExchangeContextProvider: FC<CurrencyExchangeContextProvider
     }
   }, [receiveCoin, sellCoin]);
 
+  const cleanUpContext = useCallback(async () => {
+    await getListCoins();
+    setReceiveCoin(null);
+    setSellAmount("")
+    setSelectCointType(null)
+  }, [])
+
   return (
     <CurrencyExchangeContext.Provider
       value={{
@@ -114,12 +128,15 @@ export const CurrencyExchangeContextProvider: FC<CurrencyExchangeContextProvider
         receiveCoin,
         sellAmount,
         selectCointType,
+        submitting,
         setSellCoin,
         setReceiveCoin,
         setSellAmount,
         selectCoinModalRef,
         toggleSelectCoinModal,
         swapCoin,
+        setSubmitting,
+        cleanUpContext
       }}
     >
       {children}
