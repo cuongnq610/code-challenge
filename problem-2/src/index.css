@@ -1,0 +1,108 @@
+@import 'tailwindcss';
+
+/* Animation Definition */
+@theme {
+  --animate-fade-in: fadeIn 0.3s ease-in forwards;
+  --animate-fade-out: fadeOut 0.3s ease-in forwards;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0.3;
+      scale: 0.5;
+    }
+
+    100% {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      scale: 1;
+    }
+
+    100% {
+      opacity: 0.3;
+      scale: 0.5;
+    }
+  }
+}
+
+/* Custom Class Definition */
+@layer base {
+  .abs-center-y {
+    @apply absolute top-1/2 -translate-y-1/2;
+  }
+
+  .abs-center-x {
+    @apply absolute left-1/2 -translate-x-1/2;
+  }
+
+  .abs-center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  cursor: pointer;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}
